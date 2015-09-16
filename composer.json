@@ -1,0 +1,8 @@
+{
+    "name": "simplesamlphp/simplesamlphp-module-simpletotp",
+    "description": "A highly configurable yet simple to use TOTP based two-factor authentication processing module for SimpleSAMLphp",
+    "type": "simplesamlphp-module",
+    "require": {
+        "simplesamlphp/composer-module-installer": "~1.0"
+    }
+}

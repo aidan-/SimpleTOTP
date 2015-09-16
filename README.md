@@ -21,7 +21,7 @@ Like any other auth process filter, this module needs to be configured in an aut
 
 The ```secret_attr``` needs to be available in the attribute payload as it is used to generate the token for comparison.  This can be added using other auth process filters to look up an external databases of sorts (SQL, LDAP, etc).
 
-After the module has been called, the attribute will be moved out of the user attribute array.  As a safety precaution an extra step should be taken ensure this attribute is removed.  This can be done using the ```core:AttributeAlter``` filter or similar. 
+After the module has been called, the attribute will be moved out of the user attribute array.  As a safety precaution an extra step should be taken ensure this attribute is removed.  This can be done using the ```core:AttributeAlter``` filter or similar.
 
 ###Example
 
@@ -53,7 +53,7 @@ Installation
 ### Via Git
 A simple ```git clone``` in the SimpleSAMLphp module directory is all that is required.
 ### Via Composer
-TODO
+```composer.phar require simplesamlphp/simplesamlphp-module-simpletotp:dev-master```
 
 TODO
 ----
