@@ -1,9 +1,9 @@
 <?php
 /**
  * SimpleTOTP Authentication Processing filter
- * 
- * SimpleTOTP is a SimpleSAMLphp auth processing filter that enables the use 
- *  of the Time-Based One-Time Password Algorithm (TOTP) as a second-factor 
+ *
+ * SimpleTOTP is a SimpleSAMLphp auth processing filter that enables the use
+ *  of the Time-Based One-Time Password Algorithm (TOTP) as a second-factor
  *  authentication mechanism on either an Identity Provider or Service Provider
  *  (...or both!).
  *
@@ -40,8 +40,8 @@ class sspmod_simpletotp_Auth_Process_2fa extends SimpleSAML_Auth_ProcessingFilte
     private $enforce_2fa = false;
 
     /**
-     * External URL to redirect user to if $enforce_2fa is true and they do not 
-     *  have a TOTP attribute set.  If this attribute is NULL, the user will 
+     * External URL to redirect user to if $enforce_2fa is true and they do not
+     *  have a TOTP attribute set.  If this attribute is NULL, the user will
      *  be redirect to the internal error page.
      */
     private $not_configured_url = NULL;
@@ -72,7 +72,7 @@ class sspmod_simpletotp_Auth_Process_2fa extends SimpleSAML_Auth_ProcessingFilte
  secret_attr must be a string');
             }
         }
-        
+
         if (array_key_exists('not_configured_url', $config)) {
             $this->not_configured_url = $config['not_configured_url'];
             if (!is_string($config['not_configured_url'])) {
@@ -97,7 +97,8 @@ class sspmod_simpletotp_Auth_Process_2fa extends SimpleSAML_Auth_ProcessingFilte
 
         $attributes =& $state['Attributes'];
 
-        if (array_key_exists($this->secret_attr, $attributes)) {
+        // check for secret_attr coming from user store and make sure it is not empty
+        if (array_key_exists($this->secret_attr, $attributes) && !empty($attributes[$this->secret_attr])) {
             $this->secret_val = $attributes[$this->secret_attr][0];
         }
 
