@@ -30,7 +30,7 @@ Placed in either config.php's authproc or in the appropriate metadata entity:
 10 => array(
 	'class' => 'simpletotp:2fa',
 	'secret_attr' => 'ga_secret', //default
-	'enforce_2fa' => 'false', //default
+	'enforce_2fa' => false, //default
 	'not_configured_url' => NULL,  //default
 ),
 ```
@@ -45,6 +45,28 @@ Placed in config.php authproc as one of the last functions to be processed:
 	'%remove',
 ),
 ```
+
+Example of how it can work with example-userpass module. Below config goes in authsource.php
+This module is enabled by default but if it is not make sure you create a file called enable
+inside modules/exampleauth directory.
+
+```php
+	'example-userpass' => array(
+		'exampleauth:UserPass',
+		'student:studentpass' => array(
+			'uid' => array('test'),
+			'ga_secret' => array('4HX4WBKVIJWDUV5I'),
+			'eduPersonAffiliation' => array('member', 'student'),
+		),
+	),
+```
+
+After logging in with username: student password: studentpass, you will be challenged for TOTP.
+4HX4WBKVIJWDUV5I is a secret key that can be generate by visiting /simplesaml/module.php/simpletotp/generate_token.php
+
+A random one will be generated everytime. You can also use the QR code to register your IdP with apps such as FreeOTP
+or Google Authenticator etc.
+
 
 **NOTE**: for TOTP to work you **MUST** ensure that the clock on your server is in sync.  If it is not, a matching token will never be generated and authentication will fail.
 
