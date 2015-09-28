@@ -1,5 +1,5 @@
 {
-    "name": "simplesamlphp/simplesamlphp-module-simpletotp",
+    "name": "aidan/simplesamlphp-module-simpletotp",
     "description": "A highly configurable yet simple to use TOTP based two-factor authentication processing module for SimpleSAMLphp",
     "type": "simplesamlphp-module",
     "require": {
