@@ -75,7 +75,7 @@ Installation
 ### Via Git
 A simple ```git clone``` in the SimpleSAMLphp module directory is all that is required.
 ### Via Composer
-```composer.phar require simplesamlphp/simplesamlphp-module-simpletotp:dev-master```
+```composer.phar require aidan/simplesamlphp-module-simpletotp```
 
 TODO
 ----
