@@ -29,7 +29,7 @@ Placed in either config.php's authproc or in the appropriate metadata entity:
 ```php
 10 => array(
 	'class' => 'simpletotp:2fa',
-	'secret_attr' => 'ga_secret', //default
+	'secret_attr' => 'totp_secret', //default
 	'enforce_2fa' => false, //default
 	'not_configured_url' => NULL,  //default
 ),
