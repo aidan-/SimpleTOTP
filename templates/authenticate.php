@@ -7,7 +7,6 @@
  */
 assert('is_array($this->data["formData"])');
 assert('is_string($this->data["formPost"])');
-assert('is_string($this->data["userError"])');
 
 $this->data['head']  = '<link rel="stylesheet" type="text/css" href="/' .
     $this->data['baseurlpath'] . 'module.php/simpletotp/style.css" />' . "\n";
