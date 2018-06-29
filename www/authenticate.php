@@ -33,7 +33,7 @@ if (array_key_exists('code', $_REQUEST)) {
 
         //check if code is valid
         $code = getCode($state['2fa_secret']);
-        SimpleSAML_Logger::debug("secret: " . $state['2fa_secret'] . " code entered: " .
+        SimpleSAML\Logger::debug("secret: " . $state['2fa_secret'] . " code entered: " .
         $_REQUEST['code'] . " actual code: $code");
 
         if ($code === $_REQUEST['code']) {
@@ -47,7 +47,7 @@ if (array_key_exists('code', $_REQUEST)) {
 // populate values for template
 $t = new SimpleSAML_XHTML_Template($globalConfig, 'simpletotp:authenticate.php');
 $t->data['formData'] = array('StateId' => $id);
-$t->data['formPost'] = SimpleSAML_Module::getModuleURL('simpletotp/authenticate.php');
+$t->data['formPost'] = SimpleSAML\Module::getModuleURL('simpletotp/authenticate.php');
 $t->data['userError'] = $displayed_error;
 $t->show();
 
