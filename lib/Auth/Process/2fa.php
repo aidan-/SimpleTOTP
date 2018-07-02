@@ -104,18 +104,18 @@ class sspmod_simpletotp_Auth_Process_2fa extends SimpleSAML_Auth_ProcessingFilte
 
         if ($this->secret_val === NULL && $this->enforce_2fa === true) {
             #2f is enforced and user does not have it configured..
-            SimpleSAML_Logger::debug('User with ID xxx does not have 2f configured when it is
+            SimpleSAML\Logger::debug('User with ID xxx does not have 2f configured when it is
             mandatory for xxxSP');
 
             //send user to custom error page if configured
             if ($this->not_configured_url !== NULL) {
                 SimpleSAML_Utilities::redirectUntrustedURL($this->not_configured_url);
             } else {
-                SimpleSAML_Utilities::redirectTrustedURL(SimpleSAML_Module::getModuleURL('simpletotp/not_configured.php'));
+                SimpleSAML_Utilities::redirectTrustedURL(SimpleSAML\Module::getModuleURL('simpletotp/not_configured.php'));
             }
 
         } elseif ($this->secret_val === NULL && $this->enforce_2fa === false) {
-            SimpleSAML_Logger::debug('User with ID xxx does not have 2f configured but SP does not
+            SimpleSAML\Logger::debug('User with ID xxx does not have 2f configured but SP does not
             require it. Continue.');
             return;
         }
@@ -125,7 +125,7 @@ class sspmod_simpletotp_Auth_Process_2fa extends SimpleSAML_Auth_ProcessingFilte
 
         //this means we have secret_val configured for this session, time to 2fa
         $id  = SimpleSAML_Auth_State::saveState($state, 'simpletotp:request');
-        $url = SimpleSAML_Module::getModuleURL('simpletotp/authenticate.php');
+        $url = SimpleSAML\Module::getModuleURL('simpletotp/authenticate.php');
         SimpleSAML_Utilities::redirectTrustedURL($url, array('StateId' => $id));
 
         return;
