@@ -1,0 +1,44 @@
+{#
+ * Template form for submitting 2fa codes
+#}
+{% set pagetitle = 'TOTP'|trans %}
+{% extends '@core/base.twig' %}
+
+{% block preload %}
+<link rel="stylesheet" type="test/css" href="/{{ baseurlpath }}/module.php/simpletotp/style.css" />
+{% endblock %}
+
+{% block content %}
+
+<h1>Two-Factor Authentication Required</h1>
+<p>You are required to enter your current two-factor authentication token using your configured device to continue. <br />
+If you are unsure what this means, or have your lost your two-factor authentication device, you will need to contact your IT helpdesk for assistance.</p>
+
+{% if userError is defined and userError is not null %}
+    <div class="pure-g">
+        <div class="pure-u-1">
+            <div class="message-box error">
+
+                <h3>{% trans %}Authentication Error{% endtrans %}</h3>
+
+                <p>{{userError}}</p>
+
+            </div>
+        </div>
+    </div>
+{% endif %}
+
+<!-- <form style="display: inline; margin: 0px; padding: 0px" action="{{ formPost }}"> -->
+<form class="pure-form" action="{{ formPost }}">
+	{%- for name, value in formData %}
+		<input type="hidden" name="{{ name }}" value="{{ value }}" />
+	{%- endfor %}
+
+    <label for="code">TOTP Code: </label>
+    <input type="text" name="code" placeholder="TOTP code" />
+    <button class="pure-button pure-button-red" type="submit" id="submit_button" data-processing="{% trans %}Processing...{% endtrans %}">
+		{% trans %}Submit{% endtrans %}
+	</button>
+</form>
+
+{% endblock %}
