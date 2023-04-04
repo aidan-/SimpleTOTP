@@ -43,8 +43,8 @@ if (array_key_exists('code', $_REQUEST)) {
     } else {
 
         //check if code is valid
-        $code = getCode($state['2fa_secret']);
-        Logger::debug("secret: " . $state['2fa_secret'] . " code entered: " .  $_REQUEST['code'] . " actual code: $code");
+        $code = getCode($state['mfa_secret']);
+        Logger::debug("secret: " . $state['mfa_secret'] . " code entered: " .  $_REQUEST['code'] . " actual code: $code");
 
         if ($code === $_REQUEST['code']) {
             ProcessingChain::resumeProcessing($state);
