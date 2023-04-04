@@ -28,9 +28,9 @@ After the module has been called, the attribute will be moved out of the user at
 Placed in either config.php's authproc or in the appropriate metadata entity:
 ```php
 10 => array(
-	'class' => 'simpletotp:2fa',
+	'class' => 'simpletotp:mfa',
 	'secret_attr' => 'ga_secret', //default
-	'enforce_2fa' => false, //default
+	'enforce_mfa' => false, //default
 	'not_configured_url' => NULL,  //default
 ),
 ```
