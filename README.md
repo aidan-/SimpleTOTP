@@ -32,6 +32,7 @@ Placed in either config.php's authproc or in the appropriate metadata entity:
 	'secret_attr' => 'ga_secret', //default
 	'enforce_mfa' => false, //default
 	'not_configured_url' => NULL,  //default
+	'validation_timeout' => <int>, //default 60 (units: minutes) - optional timeout value for re-validation
 ),
 ```
 
