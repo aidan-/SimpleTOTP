@@ -96,6 +96,15 @@ class Mfa extends Auth\ProcessingFilter {
                 $this->not_configured_url = NULL;
             }
         }
+
+        if (array_key_exists('validation_timeout', $config)) {
+            $this->validation_timeout = $config['validation_timeout'];
+            if (!is_int($this->validation_timeout)) {
+                throw new Exception('Invalid attribute name given to simpletotp::mfa filter: validation_timeout must be an integer');
+            }
+        } else {
+			$this->validation_timeout = 60;
+		}
     }
 
     /**
@@ -116,8 +125,7 @@ class Mfa extends Auth\ProcessingFilter {
 
         if ($this->secret_val === NULL && $this->enforce_mfa === true) {
             # 2f is enforced and user does not have it configured..
-// TODO - see if we can get the user ID from the Session information
-            Logger::debug('User with ID XXX does not have 2f configured when it is mandatory for an idP or a SP');
+            Logger::debug('User with ID "' . $attributes['uid'][0] . '" does not have 2f configured when it is mandatory for an idP or a SP');
 
             //send user to custom error page if configured
             if ($this->not_configured_url !== NULL) {
@@ -129,7 +137,7 @@ class Mfa extends Auth\ProcessingFilter {
             }
 
         } elseif ($this->secret_val === NULL && $this->enforce_mfa === false) {
-            Logger::debug('User with ID XXX does not have 2f configured but SP does not require it. Continue.');
+            Logger::debug('User with ID "' . $attributes['uid'][0] . '" does not have 2f configured but SP does not require it. Continue.');
             return;
         }
 
@@ -150,7 +158,8 @@ class Mfa extends Auth\ProcessingFilter {
         Logger::debug('MFA: last verified ' . $lastverified);
         Logger::debug('MFA: time ' . $now);
 
-        if ( ($lastverified === NULL) || ($now - $lastverified) > (60 * 60) ){
+		// validation_timeout is in minutes - needs to be converted to seconds
+        if ( ($lastverified === NULL) || (($now - $lastverified) > (60 * $this->validation_timeout)) ){
             // update if re-verification required
             $session->setData(
                 '\SimpleSAML\Module\simpletotp',
