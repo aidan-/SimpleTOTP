@@ -88,13 +88,13 @@ class Mfa extends Auth\ProcessingFilter {
             }
 
             //validate URL to ensure it's we will be able to redirect to
-			$httpUtils = new Utils\HTTP();
-			if (is_string($config['not_configured_url'])) {
-				$this->not_configured_url =
-					$httpUtils->checkURLAllowed($config['not_configured_url']);
-			} else {
-				$this->not_configured_url = NULL;
-			}
+            $httpUtils = new Utils\HTTP();
+            if (is_string($config['not_configured_url'])) {
+                $this->not_configured_url =
+                    $httpUtils->checkURLAllowed($config['not_configured_url']);
+            } else {
+                $this->not_configured_url = NULL;
+            }
         }
     }
 
@@ -125,7 +125,7 @@ class Mfa extends Auth\ProcessingFilter {
                 $httpUtils->redirectUntrustedURL($this->not_configured_url);
             } else {
                 $httpUtils = new Utils\HTTP();
-				$httpUtils->redirectTrustedURL(Module::getModuleURL('simpletotp/not_configured.php'));
+                $httpUtils->redirectTrustedURL(Module::getModuleURL('simpletotp/not_configured.php'));
             }
 
         } elseif ($this->secret_val === NULL && $this->enforce_mfa === false) {
@@ -137,40 +137,42 @@ class Mfa extends Auth\ProcessingFilter {
         $state['mfa_secret'] = $this->secret_val;
 
         //this means we have secret_val configured for this session, time to MFA
-		$now = time();
+        $now = time();
 
-		// check to see if MFA has been verified in the last hour
-		$session = Session::getSessionFromRequest();
-		$alldata = $session->getDataOfType('\SimpleSAML\Module\simpletotp');
-		Logger::debug('MFA: alldata ' . implode(',', array_keys($alldata)));
-		Logger::debug('MFA: alldata lastverified ' . $alldata['lastverified']);
-		$lastverified = $session->getData('\SimpleSAML\Module\simpletotp', 'lastverified');
-		Logger::debug('MFA: last verified ' . $lastverified);
-		Logger::debug('MFA: time ' . $now);
+        // check to see if MFA has been verified in the last hour
+        $session = Session::getSessionFromRequest();
+        $alldata = $session->getDataOfType('\SimpleSAML\Module\simpletotp');
+        Logger::debug('MFA: alldata ' . implode(',', array_keys($alldata)));
+        if ( array_key_exists('lastverified', $alldata) ) {
+            Logger::debug('MFA: alldata lastverified ' . $alldata['lastverified']);
+        }
+        $lastverified = $session->getData('\SimpleSAML\Module\simpletotp', 'lastverified');
+        Logger::debug('MFA: last verified ' . $lastverified);
+        Logger::debug('MFA: time ' . $now);
 
-		if ( ($lastverified === NULL) || ($now - $lastverified) > (60 * 60) ){
-			// update if re-verification required
-			$session->setData(
-				'\SimpleSAML\Module\simpletotp',
-				'lastverified',
-				$now,
-				Session::DATA_TIMEOUT_SESSION_END
-			);
-			if ( $lastverified === NULL ) {
-				$reason = 'new session';
-			} else {
-				$reason = ($now - $lastverified) . 's ago';
-			}
-			Logger::info('MFA: verification required.  New session or last verified more than an hour ago - ' . $reason);
-		} else {
-			// nothing more to do here
-			Logger::info('MFA: already verified in the last hour - ' . ($now - $lastverified) . 's ago');
-			return;
-		}
+        if ( ($lastverified === NULL) || ($now - $lastverified) > (60 * 60) ){
+            // update if re-verification required
+            $session->setData(
+                '\SimpleSAML\Module\simpletotp',
+                'lastverified',
+                $now,
+                Session::DATA_TIMEOUT_SESSION_END
+            );
+            if ( $lastverified === NULL ) {
+                $reason = 'new session';
+            } else {
+                $reason = ($now - $lastverified) . 's ago';
+            }
+            Logger::info('MFA: verification required.  New session or last verified more than an hour ago - ' . $reason);
+        } else {
+            // nothing more to do here
+            Logger::info('MFA: already verified in the last hour - ' . ($now - $lastverified) . 's ago');
+            return;
+        }
 
         $id  = Auth\State::saveState($state, 'simpletotp:request');
         $url = Module::getModuleURL('simpletotp/authenticate.php');
-		$httpUtils = new Utils\HTTP();
+        $httpUtils = new Utils\HTTP();
         $httpUtils->redirectTrustedURL($url, array('StateId' => $id));
 
         return;
