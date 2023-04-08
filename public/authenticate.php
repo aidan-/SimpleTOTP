@@ -26,7 +26,6 @@ if (!array_key_exists('StateId', $_REQUEST)) {
 
 $id = $_REQUEST['StateId'];
 
-//$sid = SimpleSAML_Utilities::parseStateID($id);
 $sid = State::parseStateID($id);
 if (!is_null($sid['url'])) {
 	$httpUtils = new Utils\HTTP();
@@ -59,7 +58,6 @@ $t = new Template($globalConfig, 'simpletotp:authenticate.twig');
 $t->data['formData'] = array('StateId' => $id);
 $t->data['formPost'] = Module::getModuleURL('simpletotp/authenticate.php');
 $t->data['userError'] = $displayed_error;
-//$t->show();
 echo $t->getContents();
 
 #######################################

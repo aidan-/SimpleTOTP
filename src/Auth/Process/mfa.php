@@ -115,9 +115,8 @@ class Mfa extends Auth\ProcessingFilter {
         }
 
         if ($this->secret_val === NULL && $this->enforce_mfa === true) {
-            # 2f is enforced and user does not have it configured..
-// TODO - see if we can get the user ID from the Session information
-            Logger::debug('User with ID XXX does not have 2f configured when it is mandatory for an idP or a SP');
+            # MFA is enforced and user does not have it configured..
+            Logger::debug('User with ID "' . $attributes['uid'][0] . '" does not have MFA configured when it is mandatory for an idP or a SP');
 
             //send user to custom error page if configured
             if ($this->not_configured_url !== NULL) {
@@ -129,7 +128,7 @@ class Mfa extends Auth\ProcessingFilter {
             }
 
         } elseif ($this->secret_val === NULL && $this->enforce_mfa === false) {
-            Logger::debug('User with ID XXX does not have 2f configured but SP does not require it. Continue.');
+            Logger::debug('User with ID "' . $attributes['uid'][0] . '" does not have 2f configured but SP does not require it. Continue.');
             return;
         }
 

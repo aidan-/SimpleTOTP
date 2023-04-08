@@ -1,5 +1,5 @@
 {#
- * Template form for submitting 2fa codes
+ * Template form for submitting TOTP codes
 #}
 {% set pagetitle = 'TOTP'|trans %}
 {% extends '@core/base.twig' %}
@@ -11,7 +11,7 @@
 {% block content %}
 
 <h1>Two-Factor Authentication Required</h1>
-<p>You are required to enter your current two-factor authentication token using your configured device to continue. <br />
+<p>You are required to enter your current multi-factor authentication token using your configured device to continue. <br />
 If you are unsure what this means, or have your lost your two-factor authentication device, you will need to contact your IT helpdesk for assistance.</p>
 
 {% if userError is defined and userError is not null %}
