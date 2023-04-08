@@ -124,8 +124,8 @@ class Mfa extends Auth\ProcessingFilter {
         }
 
         if ($this->secret_val === NULL && $this->enforce_mfa === true) {
-            # 2f is enforced and user does not have it configured..
-            Logger::debug('User with ID "' . $attributes['uid'][0] . '" does not have 2f configured when it is mandatory for an idP or a SP');
+            # MFA is enforced and user does not have it configured..
+            Logger::debug('User with ID "' . $attributes['uid'][0] . '" does not have MFA configured when it is mandatory for an idP or a SP');
 
             //send user to custom error page if configured
             if ($this->not_configured_url !== NULL) {
