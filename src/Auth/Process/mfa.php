@@ -15,6 +15,7 @@
  *    'secret_attr' => 'totp_secret', //default
  *    'enforce_mfa' => false, //default
  *    'not_configured_url' => NULL,  //default
+ *    'validation_timeout' => <int>, //default 60 (units: minutes) - optional timeout value for re-validation
  *  ),
  * </code>
  *
@@ -55,6 +56,13 @@ class Mfa extends Auth\ProcessingFilter {
      *  be redirect to the internal error page.
      */
     private $not_configured_url = NULL;
+
+    /**
+     * Timeout (in minutes) for a validated TOTP value.  If a user is authenticating again, 
+     *  and the time difference is less than this validation, they won't be asked for a TOTP value.
+     *  Defaults to 60 minutes.
+     */
+    private $validation_timeout = 60;
 
     /**
      * Initialize the filter.
@@ -102,9 +110,7 @@ class Mfa extends Auth\ProcessingFilter {
             if (!is_int($this->validation_timeout)) {
                 throw new Exception('Invalid attribute name given to simpletotp::mfa filter: validation_timeout must be an integer');
             }
-        } else {
-			$this->validation_timeout = 60;
-		}
+        }
     }
 
     /**
