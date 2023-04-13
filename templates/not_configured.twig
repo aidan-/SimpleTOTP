@@ -1,0 +1,19 @@
+{#
+ * Template for error message users receive when they do not have a TOTP
+ *  value when MFA is enforced.
+#}
+
+{% set pagetitle = 'TOTP'|trans %}
+{% extends '@core/base.twig' %}
+
+{% block preload %}
+<link rel="stylesheet" type="test/css" href="/{{ baseurlpath }}/module.php/simpletotp/style.css" />
+{% endblock %}
+
+{% block content %}
+
+<h1>Multi-Factor Authentication Required</h1>
+<p>It seems you do not have multi-factor authentication configured.  This system has been configured such that it is mandatory to use multi-factor authentication.</p>
+<p>If you are unsure what this means, or have your lost your multi-factor authentication device, you will need to contact your IT helpdesk for assistance.</p>
+
+{% endblock %}

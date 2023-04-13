@@ -7,7 +7,16 @@
  *
  * @package simpleSAMLphp
  */
- $globalConfig = SimpleSAML_Configuration::getInstance();
+
+use SimpleSAML\Configuration;
+use SimpleSAML\Utils;
+use SimpleSAML\Auth\ProcessingChain;
+use SimpleSAML\Auth\State;
+use SimpleSAML\Module;
+use SimpleSAML\XHTML\Template;
+use SimpleSAML\Logger;
+
+$globalConfig = Configuration::getInstance();
 
 if (!array_key_exists('StateId', $_REQUEST)) {
     throw new SimpleSAML_Error_BadRequest(
@@ -17,12 +26,13 @@ if (!array_key_exists('StateId', $_REQUEST)) {
 
 $id = $_REQUEST['StateId'];
 
-$sid = SimpleSAML_Utilities::parseStateID($id);
+$sid = State::parseStateID($id);
 if (!is_null($sid['url'])) {
-    SimpleSAML_Utilities::checkURLAllowed($sid['url']);
+	$httpUtils = new Utils\HTTP();
+    $httpUtils->checkURLAllowed($sid['url']);
 }
 
-$state = SimpleSAML_Auth_State::loadState($id, 'simpletotp:request');
+$state = State::loadState($id, 'simpletotp:request');
 $displayed_error = NULL;
 
 //if code is set, user has posted back to this page with a guess
@@ -32,12 +42,11 @@ if (array_key_exists('code', $_REQUEST)) {
     } else {
 
         //check if code is valid
-        $code = getCode($state['2fa_secret']);
-        SimpleSAML\Logger::debug("secret: " . $state['2fa_secret'] . " code entered: " .
-        $_REQUEST['code'] . " actual code: $code");
+        $code = getCode($state['mfa_secret']);
+        Logger::debug("secret: " . $state['mfa_secret'] . " code entered: " .  $_REQUEST['code'] . " actual code: $code");
 
         if ($code === $_REQUEST['code']) {
-            SimpleSAML_Auth_ProcessingChain::resumeProcessing($state);
+            ProcessingChain::resumeProcessing($state);
         } else {
             $displayed_error = "You have entered the incorrect TOTP token.";
         }
@@ -45,11 +54,11 @@ if (array_key_exists('code', $_REQUEST)) {
 }
 
 // populate values for template
-$t = new SimpleSAML_XHTML_Template($globalConfig, 'simpletotp:authenticate.php');
+$t = new Template($globalConfig, 'simpletotp:authenticate.twig');
 $t->data['formData'] = array('StateId' => $id);
-$t->data['formPost'] = SimpleSAML\Module::getModuleURL('simpletotp/authenticate.php');
+$t->data['formPost'] = Module::getModuleURL('simpletotp/authenticate.php');
 $t->data['userError'] = $displayed_error;
-$t->show();
+echo $t->getContents();
 
 #######################################
 # Google Authentication functions below taken from 
